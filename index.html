@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+
+
+
+
+<html>
+  <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui">
+  <meta charset="UTF-8">
+  <title>25th Wexford Cub programme</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700|Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vuetify/2.6.4/vuetify.css" integrity="sha512-YKS9PfkeWxgoJUnPosO2aMQ5RlKkzkEAtIVb8G+ZE+ISVwWuPB5cXRg8v7njhE6mBOsFDSqPKeZgTVvMrFPCug==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="./event.css" type="text/css">
+  </head>
+<body>
+
+<!-- This is the event list component. Ignore the template thing. Just makes it so I don't have to type it in the JS -->
+
+<template id="componentTemplate" text="text/template">
+	<transition-group
+		tag="ul"
+		class="event-card-list"
+		name="fade-in"
+		:css="false"
+		v-on:before-enter="cardBeforeEnter"
+		v-on:enter="cardEnter"
+		v-on:leave="cardLeave"
+		appear>
+		<li v-for="(item, index) in filteredList()" :key="item.id" :data-index="index">
+			<v-card class="event-card">
+				<v-layout row>
+					<img :src="item.pic">
+					<v-layout column justify-space-between style="padding: 0.8em 1.3em; max-width: 390px;">
+						<div>
+							<h1 class="name">{{ item.title }}</h1>
+							<h3 class="date">{{ item.when }}</h3>
+						</div>
+						<div>
+							<p class="desc">{{ item.desc }}</p>
+							<div class="location">
+								<v-icon v-if="item.address">location_on</v-icon>
+								{{ item.address }}
+							</div>
+						</div>
+						<div class="date-ribbon">
+							<h2>{{ item.month }}</h2>
+							<h1>{{ item.day }}</h1>
+						</div>
+					</v-layout>
+				</v-layout>
+			</v-card>
+		</li>
+	</transition-group>
+</template>
+<!-- Above is the event list component. Below you can ignore -->
+
+
+<div id="app">
+<v-app>
+	<v-toolbar color="#900000">
+		<v-toolbar-title class="white--text">
+			25th Wexford Cub programme
+		</v-toolbar-title>
+		<v-spacer></v-spacer>
+		<a href="https:&#x2F;&#x2F;mcrotty.github.io&#x2F;cubs" target="_blank" rel="noopener" style="text-decoration: none;">
+			<v-btn icon dark>
+				<v-icon>share</v-icon>
+			</v-btn>
+		</a>
+	</v-toolbar>
+	<v-main style="background: #eee">
+		<v-container>
+			<v-layout justify-center>
+				<v-layout class="wrapme" column align-center justify-center>
+					<div :class="['search-bar', searchIsFocused ? 'elevation-6' : 'elevation-3']">
+						<input placeholder="Search"
+								v-on:focus="searchFocus()"
+								v-on:blur="searchUnfocus()"
+								type="text"
+								name="search"
+								v-model="filter.search">
+					</div>
+					<v-layout align-center justify-space-between row style="width: 100%;">
+						<div class="upcoming-events-filter-group">
+							<input type="radio" id="upcomingSelect" name="upcoming-select" value="upcoming" v-model="eventsUpcomingFilter" @change="upcomingFilterChange()">
+							<label for="upcomingSelect">Upcoming</label>
+							<input type="radio" id="finishedSelect" name="finished-select" value="finished" v-model="eventsUpcomingFilter" @change="upcomingFilterChange()">
+							<label for="finishedSelect">Finished</label>
+							<input type="radio" id="importantSelect" name="important-select" value="important" v-model="eventsUpcomingFilter" @change="upcomingFilterChange()">
+							<label for="importantSelect">County</label>
+							<div class="underline"></div>
+						</div>
+						<v-btn text style="align-self: flex-end; color: #9E9E9E; margin-right: 1.4em">
+							<span style="padding-right: 0.4em;">Filter</span>
+							<v-icon>filter_list</v-icon>
+						</v-btn>
+					</v-layout>
+					<!-- CUSTOM EVENT LIST COMPONENT -->
+					<event-list
+						:filter-upcoming="filter.upcoming"
+						:filter-important="filter.important"
+						:filter-search="filter.search"
+            content = "./programme.json"
+            nodetails=false />
+					<!-- THE THING ABOVE IS THE CUSTOM EVENT LIST COMPONENT -->
+				</v-layout>
+			</v-layout>
+		</v-container>
+	</v-main>
+</v-app>
+</div>
+
+<script src="https://unpkg.com/babel-polyfill/dist/polyfill.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.14/vue.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vuetify/2.6.4/vuetify.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script>
+<script src="./event.js"></script>
+
+</body>
+</html>
